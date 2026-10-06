@@ -2,33 +2,67 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, classification_report
 
-df=pd.read_csv("heart_disease.csv")
-df["target"] = (df["target"] > 0).astype(int)
+def load_data():
+    df=pd.read_csv("heart_disease.csv")
+    x = df.drop(columns = "target")
+    y = df["target"]
+    return x,y
 
-x = df.drop(columns="target")
-y = df["target"]
-x_train, x_test, y_train, y_test = train_test_split(x, y, 
-    test_size=0.2, stratify=y, random_state=42)
+def models():
+    return {
+        "Logistic regression": LogisticRegression(max_iter=1000),
+        "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42)
+        }
 
-model = LogisticRegression(max_iter=1000)
+def train_and_compare():
+    x,y = load_data()
+    x_train, x_test, y_train, y_test = train_test_split(x, y, 
+        test_size=0.2, stratify=y, random_state=42)
+    model = models()
+    rows=[]
+    confusion={}
 
-rows=[]
-confusion=[]
-    
-crossValidation_auc = cross_val_score(model, x_train, y_train, cv=5, scoring="roc_auc")
-model.fit(x_train,y_train)
-pred = model.predict(x_test)
-accuracy = (pred == y_test).mean()
+    for name, model in model.items():
+        crossValidation_auc = cross_val_score(model, x_train, y_train, cv=5, scoring="roc_auc")
+        model.fit(x_train,y_train)
+        pred = model.predict(x_test)
+        accuracy = (pred == y_test).mean()
 
-true_positive = ((pred ==1)&(y_test==1)).sum()
-false_negative = ((pred ==0)&(y_test==1)).sum()
-false_positive = ((pred ==1)&(y_test==0)).sum()
-true_negative = ((pred ==0)&(y_test==0)).sum()
+        true_positive = ((pred ==1)&(y_test==1)).sum()
+        false_negative = ((pred ==0)&(y_test==1)).sum()
+        false_positive = ((pred ==1)&(y_test==0)).sum()
+        true_negative = ((pred ==0)&(y_test==0)).sum()
 
+        rows.append({
+            "Model": name,
+            "CV_AUC": round(crossValidation_auc.mean(), 3),
+            "Accuracy": accuracy,
+            "Recall": round(true_positive/(true_positive+false_negative)),
+            "Precision": round(true_positive/(true_positive+false_positive))
+        })
 
+        confusion[name] = pd.DataFrame(
+            [[true_negative, false_positive],[false_negative,true_positive]],
+            index = ["Actually healthy", "Actually sick"],
+            columns = ["Predicted healty", "Predicted sick"]
+        )
 
+    return{
+        "models": models,
+        "results": pd.DataFrame(rows).set_index("Model"),
+        "confusion": confusion,
+        "features": list(x.columns),
+        "n_train": len(x_train),
+        "n_test": len(x_test),
+    }
+        
+if __name__ == "__main__":
+    out = train_and_compare()
+    print(f"Trained on {out['n_train']} patients, tested on {out['n_test']}\n")
+    print(out["results"])
 
 
 
