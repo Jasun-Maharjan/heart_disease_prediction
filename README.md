@@ -47,6 +47,7 @@ The raw data was cleaned before training:
 |---|---|
 | Logistic Regression | scikit-learn |
 | Random Forest | scikit-learn |
+| XGBoost | xgboost |
  
 Each model is trained on 80% of the data (by default) and tested on the remaining 20%. The split is stratified, so the healthy/disease ratio is the same in both sets.
  
@@ -68,6 +69,7 @@ Results on the default 80/20 split (your numbers may differ slightly depending o
 |---|---|---|---|---|
 | Logistic Regression | 0.867 | 0.793 | 0.843 | 0.796 |
 | Random Forest | 0.857 | 0.788 | 0.843 | 0.789 |
+| XGBoost | 0.854 | 0.815 | 0.863 | 0.815 |
  
 The two models perform very similarly. With a test set of only 184 patients, a difference of one or two patients is mostly noise, so neither model should be called clearly better.
  
