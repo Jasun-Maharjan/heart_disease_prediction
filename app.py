@@ -42,7 +42,7 @@ test_size = st.sidebar.slider("Share of data used for testing", 0.10, 0.40, 0.20
 st.sidebar.caption("Changing this retrains every model on a new split.")
  
 
-@st.cache_resource(show_spinner="Training and testing the models...")
+@st.cache_resource(show_spinner="Training and testing the models...", max_entries=1)
 def run_backend(test_size):
     return train.train_and_compare(test_size=test_size)
  

@@ -17,7 +17,7 @@ def load_data():
 def models():
     return {
         "Logistic regression": LogisticRegression(max_iter=5000),
-        "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42),
+        "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
         "XGBoost": XGBClassifier(n_estimators=200, max_depth = 3)
     }
  
