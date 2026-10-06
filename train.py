@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
  
  
 # data loaded from .csv file and split into x and y
@@ -17,6 +18,7 @@ def models():
     return {
         "Logistic regression": LogisticRegression(max_iter=5000),
         "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42),
+        "XGBoost": XGBClassifier(n_estimators=200, max_depth = 3)
     }
  
  
