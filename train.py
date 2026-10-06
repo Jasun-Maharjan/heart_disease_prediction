@@ -5,22 +5,26 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, classification_report
 
+#data loaded from .csv file and split into x and y
 def load_data():
     df=pd.read_csv("heart_disease.csv")
     x = df.drop(columns = "target")
     y = df["target"]
     return x,y
 
+#models to compare
 def models():
     return {
-        "Logistic regression": LogisticRegression(max_iter=1000),
+        "Logistic regression": LogisticRegression(max_iter=5000),
         "Random Forest": RandomForestClassifier(n_estimators=300, random_state=42)
         }
 
 def train_and_compare():
+    #data is loaded and split for training and testing
     x,y = load_data()
     x_train, x_test, y_train, y_test = train_test_split(x, y, 
         test_size=0.2, stratify=y, random_state=42)
+    
     model = models()
     rows=[]
     confusion={}
@@ -30,6 +34,7 @@ def train_and_compare():
         model.fit(x_train,y_train)
         pred = model.predict(x_test)
         accuracy = (pred == y_test).mean()
+
 
         true_positive = ((pred ==1)&(y_test==1)).sum()
         false_negative = ((pred ==0)&(y_test==1)).sum()
