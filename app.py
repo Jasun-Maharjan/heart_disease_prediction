@@ -37,8 +37,6 @@ st.title("❤️ Heart Disease Risk Predictor")
 st.caption("Educational project using the UCI Heart Disease dataset. "
            "Not a medical device and not a substitute for a doctor.")
  
-st.sidebar.caption("Changing this retrains every model on a new split.")
- 
 
 @st.cache_resource(show_spinner="Training and testing the models...", max_entries=1)
 def run_backend(test_size):
