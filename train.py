@@ -21,7 +21,6 @@ def models():
  
  
 def train_and_compare(test_size=0.2):
-    # data is loaded and split for training and testing
     x, y = load_data()
     x_train, x_test, y_train, y_test = train_test_split(
         x, y, test_size=test_size, stratify=y, random_state=42)

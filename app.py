@@ -1,12 +1,9 @@
 import pandas as pd
 import streamlit as st
- 
-import train  # the backend: trains and tests the models
+import train 
  
 st.set_page_config(page_title="Heart Disease Predictor", page_icon="❤️", layout="wide")
- 
-# ---------- Friendly labels for the input form ----------
-# Category columns: label and the meaning of each value
+
 CHOICES = {
     "sex": ("Sex", {1: "Male", 0: "Female"}),
     "cp": ("Chest pain type", {1: "Typical angina", 2: "Atypical angina",
@@ -17,8 +14,7 @@ CHOICES = {
     "exang": ("Exercise-induced angina", {0: "No", 1: "Yes"}),
     "slope": ("ST slope", {1: "Upsloping", 2: "Flat", 3: "Downsloping"}),
 }
- 
-# Number columns: label, minimum, maximum, default, step
+
 NUMBERS = {
     "age": ("Age", 20, 100, 55, 1),
     "trestbps": ("Resting blood pressure (mm Hg)", 80, 220, 130, 1),
@@ -27,9 +23,7 @@ NUMBERS = {
     "oldpeak": ("ST depression (oldpeak)", -3.0, 7.0, 1.0, 0.1),
 }
  
- 
 def ask(feature):
-    """Draw the right input widget for one feature and return the value."""
     if feature in CHOICES:
         label, options = CHOICES[feature]
         return st.selectbox(label, list(options), format_func=lambda v: options[v])
@@ -39,18 +33,15 @@ def ask(feature):
     return st.number_input(feature, value=0.0)   # any feature we don't know about
  
  
-# ---------- Header ----------
 st.title("❤️ Heart Disease Risk Predictor")
 st.caption("Educational project using the UCI Heart Disease dataset. "
            "Not a medical device and not a substitute for a doctor.")
  
-# ---------- Sidebar ----------
 st.sidebar.header("Training settings")
 test_size = st.sidebar.slider("Share of data used for testing", 0.10, 0.40, 0.20, step=0.05)
 st.sidebar.caption("Changing this retrains every model on a new split.")
  
- 
-# ---------- Backend: train and test once, then reuse ----------
+
 @st.cache_resource(show_spinner="Training and testing the models...")
 def run_backend(test_size):
     return train.train_and_compare(test_size=test_size)
@@ -66,7 +57,7 @@ st.sidebar.write(f"Trained on **{backend['n_train']}** patients")
 st.sidebar.write(f"Tested on **{backend['n_test']}** patients")
 st.sidebar.write(f"Models: **{len(models)}**")
  
-# Sick patients each model missed (bottom-left box of its confusion matrix)
+# Sick patients each model missed 
 missed = pd.Series({name: int(matrix.iloc[1, 0]) for name, matrix in confusion.items()})
  
 predict_tab, compare_tab, detail_tab = st.tabs(["Predict", "Model comparison", "Details"])
