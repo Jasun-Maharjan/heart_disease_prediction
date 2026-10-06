@@ -37,8 +37,6 @@ st.title("❤️ Heart Disease Risk Predictor")
 st.caption("Educational project using the UCI Heart Disease dataset. "
            "Not a medical device and not a substitute for a doctor.")
  
-st.sidebar.header("Training settings")
-test_size = st.sidebar.slider("Share of data used for testing", 0.10, 0.40, 0.20, step=0.05)
 st.sidebar.caption("Changing this retrains every model on a new split.")
  
 
