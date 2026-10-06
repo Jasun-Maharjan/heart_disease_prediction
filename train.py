@@ -68,7 +68,3 @@ if __name__ == "__main__":
     out = train_and_compare()
     print(f"Trained on {out['n_train']} patients, tested on {out['n_test']}\n")
     print(out["results"])
-
-
-
-
